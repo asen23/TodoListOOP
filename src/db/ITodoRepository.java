@@ -12,4 +12,6 @@ public interface ITodoRepository {
     boolean addTag(int id, int tagId);
     boolean removeTag(int id, int tagId);
     List<Todo> getTodo();
+    List<Todo> getTodoByTitleQuery(String query);
+    List<Todo> getTodoByTagId(int id);
 }
