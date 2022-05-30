@@ -24,13 +24,12 @@ public class TodoDatabase implements ITodoRepository {
     }
 
     private boolean isTodoNotExist(int id) {
-        try {
-            String query = String.format(
-                  "SELECT * FROM todo " +
-                  "WHERE id = %d",
-                  id
-            );
-            ResultSet result = db.executeQuery(query);
+        String query = String.format(
+              "SELECT * FROM todo " +
+              "WHERE id = %d",
+              id
+        );
+        try(ResultSet result = db.executeQuery(query)) {
             return !result.next();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -83,13 +82,12 @@ public class TodoDatabase implements ITodoRepository {
     }
 
     private boolean isTagNotExist(int id) {
-        try {
-            String query = String.format(
-                  "SELECT * FROM tag " +
-                  "WHERE id = %d",
-                  id
-            );
-            ResultSet result = db.executeQuery(query);
+        String query = String.format(
+              "SELECT * FROM tag " +
+              "WHERE id = %d",
+              id
+        );
+        try(ResultSet result = db.executeQuery(query)) {
             return !result.next();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -98,13 +96,12 @@ public class TodoDatabase implements ITodoRepository {
     }
 
     private boolean isTodoTagExist(int id, int tagId) {
-        try {
-            String query = String.format(
-                  "SELECT * FROM todo_tag " +
-                  "WHERE todo_id = %d AND tag_id = %d",
-                  id, tagId
-            );
-            ResultSet result = db.executeQuery(query);
+        String query = String.format(
+              "SELECT * FROM todo_tag " +
+              "WHERE todo_id = %d AND tag_id = %d",
+              id, tagId
+        );
+        try(ResultSet result = db.executeQuery(query)) {
             return result.next();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -114,13 +111,13 @@ public class TodoDatabase implements ITodoRepository {
 
     @Override
     public boolean addTag(int id, int tagId) {
-        if(isTodoNotExist(id)) {
+        if (isTodoNotExist(id)) {
             return false;
         }
-        if(isTagNotExist(tagId)) {
+        if (isTagNotExist(tagId)) {
             return false;
         }
-        if(isTodoTagExist(id, tagId)) {
+        if (isTodoTagExist(id, tagId)) {
             return false;
         }
         String query = String.format(
@@ -134,13 +131,13 @@ public class TodoDatabase implements ITodoRepository {
 
     @Override
     public boolean removeTag(int id, int tagId) {
-        if(isTodoNotExist(id)) {
+        if (isTodoNotExist(id)) {
             return false;
         }
-        if(isTagNotExist(tagId)) {
+        if (isTagNotExist(tagId)) {
             return false;
         }
-        if(!isTodoTagExist(id, tagId)) {
+        if (!isTodoTagExist(id, tagId)) {
             return false;
         }
         String query = String.format(
@@ -152,12 +149,9 @@ public class TodoDatabase implements ITodoRepository {
         return true;
     }
 
-    @Override
-    public List<Todo> getTodo() {
-        try {
-            ArrayList<Todo> todos = new ArrayList<>();
-            String query = "SELECT * FROM todo";
-            ResultSet result = db.executeQuery(query);
+    private List<Todo> getTodoWithQuery(String query) {
+        ArrayList<Todo> todos = new ArrayList<>();
+        try (ResultSet result = db.executeQuery(query)) {
             while (result.next()) {
                 int id = result.getInt("id");
                 String title = result.getString("title");
@@ -172,12 +166,15 @@ public class TodoDatabase implements ITodoRepository {
                       "WHERE todo_id = %d",
                       todo.getId()
                 );
-                ResultSet tagResult = db.executeQuery(tagQuery);
                 ArrayList<Tag> tags = new ArrayList<>();
-                while (tagResult.next()) {
-                    int tagId = tagResult.getInt("id");
-                    String name = tagResult.getString("name");
-                    tags.add(new Tag(tagId, name));
+                try (ResultSet tagResult = db.executeQuery(tagQuery)) {
+                    while (tagResult.next()) {
+                        int tagId = tagResult.getInt("id");
+                        String name = tagResult.getString("name");
+                        tags.add(new Tag(tagId, name));
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
                 todo.setTags(tags);
             }
@@ -186,5 +183,28 @@ public class TodoDatabase implements ITodoRepository {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public List<Todo> getTodo() {
+        String query = "SELECT * FROM todo";
+        return getTodoWithQuery(query);
+    }
+
+    @Override
+    public List<Todo> getTodoByTitleQuery(String titleQuery) {
+        String query = String.format("SELECT * FROM todo WHERE title LIKE '%%%s%%'", titleQuery);
+        return getTodoWithQuery(query);
+    }
+
+    @Override
+    public List<Todo> getTodoByTagId(int id) {
+        String query = String.format(
+              "SELECT * FROM todo " +
+              "JOIN todo_tag ON todo_id = id " +
+              "WHERE tag_id = %d",
+              id
+        );
+        return getTodoWithQuery(query);
     }
 }
