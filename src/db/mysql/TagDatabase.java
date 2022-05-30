@@ -23,13 +23,12 @@ public class TagDatabase implements ITagRepository {
     }
 
     private boolean isTagNotExist(int id) {
-        try {
-            String query = String.format(
-                  "SELECT * FROM tag " +
-                  "WHERE id = %d",
-                  id
-            );
-            ResultSet result = db.executeQuery(query);
+        String query = String.format(
+              "SELECT * FROM tag " +
+              "WHERE id = %d",
+              id
+        );
+        try (ResultSet result = db.executeQuery(query)) {
             return !result.next();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -68,10 +67,9 @@ public class TagDatabase implements ITagRepository {
 
     @Override
     public List<Tag> getTags() {
-        try {
-            ArrayList<Tag> tags = new ArrayList<>();
-            String query = "SELECT * FROM tag";
-            ResultSet result = db.executeQuery(query);
+        ArrayList<Tag> tags = new ArrayList<>();
+        String query = "SELECT * FROM tag";
+        try (ResultSet result = db.executeQuery(query)) {
             while (result.next()) {
                 int id = result.getInt("id");
                 String name = result.getString("name");
