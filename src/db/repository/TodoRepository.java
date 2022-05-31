@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TodoRepository implements ITodoRepository {
-    private ITodoRepository todoDb;
+    private final ITodoRepository todoDb;
     private List<Todo> todos = null;
     private String lastQuery = null;
     private int lastTagId = -1;

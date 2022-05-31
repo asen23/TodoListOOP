@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TagRepository implements ITagRepository {
-    private ITagRepository tagDb;
+    private final ITagRepository tagDb;
     private List<Tag> tags = null;
 
     public TagRepository(ITagRepository tagDb) {

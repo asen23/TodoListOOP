@@ -3,10 +3,10 @@ package db.model;
 import java.util.List;
 
 public class Todo {
-    private int id;
-    private String title;
-    private String description;
-    private boolean isDone;
+    private final int id;
+    private final String title;
+    private final String description;
+    private final boolean isDone;
     private List<Tag> tags;
 
     public Todo(int id, String title, String description, boolean isDone, List<Tag> tags) {
