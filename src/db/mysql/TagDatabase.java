@@ -4,6 +4,7 @@ import db.Connect;
 import db.ITagRepository;
 import db.model.Tag;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -14,21 +15,24 @@ public class TagDatabase implements ITagRepository {
 
     @Override
     public void addTag(String name) {
-        String query = String.format(
+        try (PreparedStatement ps = db.prepareStatement(
               "INSERT INTO tag(name) " +
-              "VALUES('%s')",
-              name
-        );
-        db.executeUpdate(query);
+              "VALUES(?)"
+        )) {
+            ps.setString(1, name);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private boolean isTagNotExist(int id) {
-        String query = String.format(
+        try (PreparedStatement ps = db.prepareStatement(
               "SELECT * FROM tag " +
-              "WHERE id = %d",
-              id
-        );
-        try (ResultSet result = db.executeQuery(query)) {
+              "WHERE id = ?"
+        )) {
+            ps.setInt(1, id);
+            ResultSet result = ps.executeQuery();
             return !result.next();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -41,13 +45,17 @@ public class TagDatabase implements ITagRepository {
         if (isTagNotExist(id)) {
             return false;
         }
-        String query = String.format(
+        try (PreparedStatement ps = db.prepareStatement(
               "UPDATE tag " +
-              "SET name = '%s' " +
-              "WHERE id = %d",
-              name, id
-        );
-        db.executeUpdate(query);
+              "SET name = ? " +
+              "WHERE id = ?"
+        )) {
+            ps.setString(1, name);
+            ps.setInt(2, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return true;
     }
 
@@ -56,20 +64,25 @@ public class TagDatabase implements ITagRepository {
         if (isTagNotExist(id)) {
             return false;
         }
-        String query = String.format(
+        try (PreparedStatement ps = db.prepareStatement(
               "DELETE FROM tag " +
-              "WHERE id = %d",
-              id
-        );
-        db.executeUpdate(query);
-        return false;
+              "WHERE id = ?"
+        )) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 
     @Override
     public List<Tag> getTags() {
         ArrayList<Tag> tags = new ArrayList<>();
-        String query = "SELECT * FROM tag";
-        try (ResultSet result = db.executeQuery(query)) {
+        try (PreparedStatement ps = db.prepareStatement(
+              "SELECT * FROM tag"
+        )) {
+            ResultSet result = ps.executeQuery();
             while (result.next()) {
                 int id = result.getInt("id");
                 String name = result.getString("name");

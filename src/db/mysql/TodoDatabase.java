@@ -5,6 +5,7 @@ import db.ITodoRepository;
 import db.model.Tag;
 import db.model.Todo;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -15,21 +16,25 @@ public class TodoDatabase implements ITodoRepository {
 
     @Override
     public void addTodo(String title, String description) {
-        String query = String.format(
+        try (PreparedStatement ps = db.prepareStatement(
               "INSERT INTO todo(title, description) " +
-              "VALUES('%s', '%s')",
-              title, description
-        );
-        db.executeUpdate(query);
+              "VALUES(?, ?)"
+        )) {
+            ps.setString(1, title);
+            ps.setString(2, description);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private boolean isTodoNotExist(int id) {
-        String query = String.format(
+        try (PreparedStatement ps = db.prepareStatement(
               "SELECT * FROM todo " +
-              "WHERE id = %d",
-              id
-        );
-        try(ResultSet result = db.executeQuery(query)) {
+              "WHERE id = ?"
+        )) {
+            ps.setInt(1, id);
+            ResultSet result = ps.executeQuery();
             return !result.next();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -42,13 +47,18 @@ public class TodoDatabase implements ITodoRepository {
         if (isTodoNotExist(id)) {
             return false;
         }
-        String query = String.format(
+        try (PreparedStatement ps = db.prepareStatement(
               "UPDATE todo " +
-              "SET title = '%s', description = '%s' " +
-              "WHERE id = %d",
-              title, description, id
-        );
-        db.executeUpdate(query);
+              "SET title = ?, description = ? " +
+              "WHERE id = ?"
+        )) {
+            ps.setString(1, title);
+            ps.setString(2, description);
+            ps.setInt(3, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return true;
     }
 
@@ -57,13 +67,17 @@ public class TodoDatabase implements ITodoRepository {
         if (isTodoNotExist(id)) {
             return false;
         }
-        String query = String.format(
+        try (PreparedStatement ps = db.prepareStatement(
               "UPDATE todo " +
-              "SET is_done = %b " +
-              "WHERE id = %d",
-              isDone, id
-        );
-        db.executeUpdate(query);
+              "SET is_done = ? " +
+              "WHERE id = ?"
+        )) {
+            ps.setBoolean(1, isDone);
+            ps.setInt(2, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return true;
     }
 
@@ -72,22 +86,25 @@ public class TodoDatabase implements ITodoRepository {
         if (isTodoNotExist(id)) {
             return false;
         }
-        String query = String.format(
+        try (PreparedStatement ps = db.prepareStatement(
               "DELETE FROM todo " +
-              "WHERE id = %d",
-              id
-        );
-        db.executeUpdate(query);
+              "WHERE id = ?"
+        )) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
     private boolean isTagNotExist(int id) {
-        String query = String.format(
+        try (PreparedStatement ps = db.prepareStatement(
               "SELECT * FROM tag " +
-              "WHERE id = %d",
-              id
-        );
-        try(ResultSet result = db.executeQuery(query)) {
+              "WHERE id = ?"
+        )) {
+            ps.setInt(1, id);
+            ResultSet result = ps.executeQuery();
             return !result.next();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -96,12 +113,13 @@ public class TodoDatabase implements ITodoRepository {
     }
 
     private boolean isTodoTagExist(int id, int tagId) {
-        String query = String.format(
+        try (PreparedStatement ps = db.prepareStatement(
               "SELECT * FROM todo_tag " +
-              "WHERE todo_id = %d AND tag_id = %d",
-              id, tagId
-        );
-        try(ResultSet result = db.executeQuery(query)) {
+              "WHERE todo_id = ? AND tag_id = ?"
+        )) {
+            ps.setInt(1, id);
+            ps.setInt(2, tagId);
+            ResultSet result = ps.executeQuery();
             return result.next();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -120,12 +138,16 @@ public class TodoDatabase implements ITodoRepository {
         if (isTodoTagExist(id, tagId)) {
             return false;
         }
-        String query = String.format(
+        try (PreparedStatement ps = db.prepareStatement(
               "INSERT INTO todo_tag(todo_id, tag_id) " +
-              "VALUES('%s', '%s')",
-              id, tagId
-        );
-        db.executeUpdate(query);
+              "VALUES(?, ?)"
+        )) {
+            ps.setInt(1, id);
+            ps.setInt(2, tagId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return true;
     }
 
@@ -140,18 +162,22 @@ public class TodoDatabase implements ITodoRepository {
         if (!isTodoTagExist(id, tagId)) {
             return false;
         }
-        String query = String.format(
+        try (PreparedStatement ps = db.prepareStatement(
               "DELETE FROM todo_tag " +
-              "WHERE todo_id = %d AND tag_id = %d",
-              id, tagId
-        );
-        db.executeUpdate(query);
+              "WHERE todo_id = ? AND tag_id = ?"
+        )) {
+            ps.setInt(1, id);
+            ps.setInt(2, tagId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return true;
     }
 
-    private List<Todo> getTodoWithQuery(String query) {
+    private List<Todo> getTodoWithPreparedStatement(PreparedStatement ps) {
         ArrayList<Todo> todos = new ArrayList<>();
-        try (ResultSet result = db.executeQuery(query)) {
+        try (ResultSet result = ps.executeQuery()) {
             while (result.next()) {
                 int id = result.getInt("id");
                 String title = result.getString("title");
@@ -160,14 +186,14 @@ public class TodoDatabase implements ITodoRepository {
                 todos.add(new Todo(id, title, description, isDone, null));
             }
             for (Todo todo : todos) {
-                String tagQuery = String.format(
+                ArrayList<Tag> tags = new ArrayList<>();
+                try (PreparedStatement tps = db.prepareStatement(
                       "SELECT id, name FROM todo_tag " +
                       "JOIN tag ON id = tag_id " +
-                      "WHERE todo_id = %d",
-                      todo.getId()
-                );
-                ArrayList<Tag> tags = new ArrayList<>();
-                try (ResultSet tagResult = db.executeQuery(tagQuery)) {
+                      "WHERE todo_id = ?"
+                )) {
+                    tps.setInt(1, todo.getId());
+                    ResultSet tagResult = tps.executeQuery();
                     while (tagResult.next()) {
                         int tagId = tagResult.getInt("id");
                         String name = tagResult.getString("name");
@@ -187,24 +213,41 @@ public class TodoDatabase implements ITodoRepository {
 
     @Override
     public List<Todo> getTodo() {
-        String query = "SELECT * FROM todo";
-        return getTodoWithQuery(query);
+        try (PreparedStatement ps = db.prepareStatement(
+              "SELECT * FROM todo"
+        )) {
+            return getTodoWithPreparedStatement(ps);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
     public List<Todo> getTodoByTitleQuery(String titleQuery) {
-        String query = String.format("SELECT * FROM todo WHERE title LIKE '%%%s%%'", titleQuery);
-        return getTodoWithQuery(query);
+        try (PreparedStatement ps = db.prepareStatement(
+              "SELECT * FROM todo WHERE title LIKE ?"
+        )) {
+            ps.setString(1, "%"+titleQuery+"%");
+            return getTodoWithPreparedStatement(ps);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
     public List<Todo> getTodoByTagId(int id) {
-        String query = String.format(
+        try (PreparedStatement ps = db.prepareStatement(
               "SELECT * FROM todo " +
               "JOIN todo_tag ON todo_id = id " +
-              "WHERE tag_id = %d",
-              id
-        );
-        return getTodoWithQuery(query);
+              "WHERE tag_id = ?"
+        )) {
+            ps.setInt(1, id);
+            return getTodoWithPreparedStatement(ps);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

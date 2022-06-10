@@ -1,10 +1,6 @@
 package db;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class Connect {
 
@@ -37,23 +33,14 @@ public class Connect {
 		return instance;
 	}
 
-	// SELECT
-	public ResultSet executeQuery(String query) {
+	public PreparedStatement prepareStatement(String query) {
+		PreparedStatement ps = null;
 		try {
-			return stmt.executeQuery(query);
-		} catch (SQLException e) {
+			ps = con.prepareStatement(query);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return null;
-	}
-
-	// INSERT UPDATE AND DELETE
-	public void executeUpdate(String query) {
-		try {
-			stmt.executeUpdate(query);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		return ps;
 	}
 
 }
