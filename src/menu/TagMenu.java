@@ -84,8 +84,12 @@ public class TagMenu implements IListing {
         print(tag.getTags());
         int tagId = getTagId("Choose tag id to edit");
         String tagName = getTagName();
-        System.out.printf("%s has been changed to %s\n", tag.getTags().get(tagId - 1).getName(), tagName);
-        tag.updateTag(tagId, tagName);
+        System.out.printf("Changing %s to %s..\n", tag.getTagById(tagId).getName(), tagName);
+        if (tag.updateTag(tagId, tagName)) {
+            System.out.println("Edit has been successful!");
+        } else {
+            System.out.println("Edit has failed..");
+        }
         ph.pressEnter();
 
     }
@@ -94,19 +98,23 @@ public class TagMenu implements IListing {
         ph.printBlankPage();
         print(tag.getTags());
         int tagId = getTagId("Choose tag id to delete");
-        System.out.printf("%s has been deleted\n", tag.getTags().get(tagId - 1).getName());
-        tag.deleteTag(tagId);
+        System.out.printf("Deleting %s..\n", tag.getTagById(tagId).getName());
+        if (tag.deleteTag(tagId)) {
+            System.out.println("Tag has been deleted successfully!");
+        } else {
+            System.out.println("Deletion has failed..");
+        }
         ph.pressEnter();
     }
 
     private int getTagId(String sentence) {
         int choice;
         do {
-            System.out.printf("%s [1..%d]\n", sentence, tag.getTags().size());
+            System.out.printf("%s\n", sentence);
             choice = scan.nextInt();
             scan.nextLine();
-            if (choice < 1 || choice > tag.getTags().size()) {
-                System.out.println("Index out of range! please enter again!");
+            if (tag.getTagById(choice) == null) {
+                System.out.println("Id is not valid! please enter again!");
             } else {
                 break;
             }
