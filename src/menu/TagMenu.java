@@ -5,7 +5,6 @@ import java.util.Scanner;
 
 import db.ITagRepository;
 import db.model.Tag;
-import db.model.Todo;
 import di.Injection;
 import helper.PrintHelp;
 
@@ -39,7 +38,7 @@ public class TagMenu implements IListing {
                     editTag();
                     break;
                 case 4:
-//                    deleteTag();
+                    deleteTag();
                     break;
                 case 0:
                     break;
@@ -50,7 +49,6 @@ public class TagMenu implements IListing {
             }
         } while (choice != 0);
     }
-
 
 
     @Override
@@ -70,7 +68,6 @@ public class TagMenu implements IListing {
         ph.printSeparator();
         System.out.println("List of Tags");
         print(tag.getTags());
-        ph.printSeparator();
         ph.pressEnter();
     }
 
@@ -85,19 +82,27 @@ public class TagMenu implements IListing {
     private void editTag() {
         ph.printBlankPage();
         print(tag.getTags());
-        ph.printSeparator();
-        int tagIndex = getTagIndex();
+        int tagIndex = getTagIndex("Choose tag index to edit");
         String tagName = getTagName();
-        System.out.printf("%s has been changed to %s\n", tag.getTags().get(tagIndex-1).getName(), tagName );
-        tag.updateTag(tagIndex,tagName);
+        System.out.printf("%s has been changed to %s\n", tag.getTags().get(tagIndex - 1).getName(), tagName);
+        tag.updateTag(tagIndex, tagName);
         ph.pressEnter();
 
     }
 
-    private int getTagIndex() {
+    private void deleteTag() {
+        ph.printBlankPage();
+        print(tag.getTags());
+        int tagIndex = getTagIndex("Choose tag index to delete");
+        System.out.printf("%s has been deleted\n", tag.getTags().get(tagIndex - 1).getName());
+        tag.deleteTag(tagIndex);
+        ph.pressEnter();
+    }
+
+    private int getTagIndex(String sentence) {
         int choice;
         do {
-            System.out.printf("Choose tag index to edit [1..%d]\n", tag.getTags().size());
+            System.out.printf("%s [1..%d]\n", sentence, tag.getTags().size());
             choice = scan.nextInt();
             scan.nextLine();
             if (choice < 1 || choice > tag.getTags().size()) {
@@ -130,6 +135,7 @@ public class TagMenu implements IListing {
         ) {
             System.out.printf("%d. %s\n", tag.getId(), tag.getName());
         }
+        ph.printSeparator();
     }
 
 

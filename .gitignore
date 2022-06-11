@@ -265,5 +265,5 @@ $RECYCLE.BIN/
 docker*
 *.iml
 *.sql
-.idea/
-src/db/Connect.java
+.idea/!/src/db/Connect.java
+!/temp/
