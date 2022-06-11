@@ -15,7 +15,7 @@ public class ToDoMenuChoice {
 	ArrayList<Todo> todos = new ArrayList<>();
 	ITodoRepository td = Injection.getTodoRepository();
 
-	public void viewTodos() {
+	protected void viewTodos() {
 
 		todos = (ArrayList<Todo>) td.getTodo();
 
@@ -32,7 +32,7 @@ public class ToDoMenuChoice {
 		ph.printBlankPage();
 	}
 
-	public void addTodo() {
+	protected void addTodo() {
 		String title, description;
 		System.out.print("Title       = ");
 		title = scan.nextLine();

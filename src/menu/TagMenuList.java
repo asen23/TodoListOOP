@@ -8,7 +8,9 @@ public class TagMenuList implements IListing {
 	PrintHelp ph = PrintHelp.getHelp();
 	Scanner scan = new Scanner(System.in);
 
+
 	protected void MenuList() {
+		TagMenuChoice option = new TagMenuChoice();
 		int choice = -1;
 		do {
 			printMenuList();
@@ -24,16 +26,16 @@ public class TagMenuList implements IListing {
 
 			switch (choice) {
 			case 1:
-//                    viewTags();
+				option.viewTags();
 				break;
 			case 2:
-//                    addTag();
+				option.addTag();
 				break;
 			case 3:
-//                    editTag();
+				option.editTag();
 				break;
 			case 4:
-//                    deleteTag();
+				option.deleteTag();
 				break;
 			case 0:
 				break;
@@ -47,7 +49,7 @@ public class TagMenuList implements IListing {
 
 	@Override
 	public void printMenuList() {
-
+		ph.printBlankPage();
 		ph.printSeparator();
 		System.out.println("1. View Tag list ");
 		System.out.println("2. Add a Tag");
@@ -56,4 +58,5 @@ public class TagMenuList implements IListing {
 		System.out.println("0. Back to main menu");
 		ph.printSeparator();
 	}
+
 }
