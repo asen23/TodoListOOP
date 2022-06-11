@@ -36,7 +36,7 @@ public class TagMenu implements IListing {
                     addTag();
                     break;
                 case 3:
-//                    editTag();
+                    editTag();
                     break;
                 case 4:
 //                    deleteTag();
@@ -50,6 +50,8 @@ public class TagMenu implements IListing {
             }
         } while (choice != 0);
     }
+
+
 
     @Override
     public void printMenuList() {
@@ -68,11 +70,46 @@ public class TagMenu implements IListing {
         ph.printSeparator();
         System.out.println("List of Tags");
         print(tag.getTags());
+        ph.printSeparator();
         ph.pressEnter();
     }
 
     private void addTag() {
         ph.printBlankPage();
+        String name = getTagName();
+        tag.addTag(name);
+        System.out.printf("%s has been added to tags database!\n", name);
+        ph.pressEnter();
+    }
+
+    private void editTag() {
+        ph.printBlankPage();
+        print(tag.getTags());
+        ph.printSeparator();
+        int tagIndex = getTagIndex();
+        String tagName = getTagName();
+        System.out.printf("%s has been changed to %s\n", tag.getTags().get(tagIndex-1).getName(), tagName );
+        tag.updateTag(tagIndex,tagName);
+        ph.pressEnter();
+
+    }
+
+    private int getTagIndex() {
+        int choice;
+        do {
+            System.out.printf("Choose tag index to edit [1..%d]\n", tag.getTags().size());
+            choice = scan.nextInt();
+            scan.nextLine();
+            if (choice < 1 || choice > tag.getTags().size()) {
+                System.out.println("Index out of range! please enter again!");
+            } else {
+                break;
+            }
+        } while (true);
+        return choice;
+    }
+
+    private String getTagName() {
         String name;
         do {
             System.out.println("Input a new tag [1..15]");
@@ -84,12 +121,8 @@ public class TagMenu implements IListing {
                 break;
             }
         } while (true);
-        tag.addTag(name);
-        System.out.printf("%s has been added to tags database!\n", name);
-        ph.pressEnter();
+        return name;
     }
-
-
 
     private void print(List<Tag> tags) {
         ph.printSeparator();
