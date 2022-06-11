@@ -1,9 +1,9 @@
 package main;
 
-import menu.Menu;
+import menu.MenuList;
 
 public class Main {
     public static void main(String[] args) {
-        new Menu();
+        new MenuList();
     }
 }

@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 import helper.PrintHelp;
 
-public class ToDoMenu implements IListing {
+public class ToDoMenuList implements IListing {
 	PrintHelp ph = PrintHelp.getHelp();
 	Scanner scan = new Scanner(System.in);
 
