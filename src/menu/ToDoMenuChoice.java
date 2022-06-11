@@ -18,7 +18,10 @@ public class ToDoMenuChoice {
 	protected void viewTodos() {
 
 		todos = (ArrayList<Todo>) td.getTodo();
-
+		ph.printBlankPage();
+		ph.printSeparator();
+		System.out.println("List of Todos");
+		ph.printSeparator();
 		for (Todo x : todos) {
 			System.out.println("ID          = " + x.getId());
 			System.out.println("Title       = " + x.getTitle());
@@ -28,6 +31,7 @@ public class ToDoMenuChoice {
 			}
 			ph.printEnter();
 		}
+		ph.printSeparator();
 		ph.pressEnter();
 		ph.printBlankPage();
 	}
@@ -42,5 +46,13 @@ public class ToDoMenuChoice {
 		System.out.println("Congrats, an item is added to your toDo List");
 
 		viewTodos();
+	}
+
+	protected void editTodo() {
+
+	}
+
+	protected void deleteTodo() {
+
 	}
 }

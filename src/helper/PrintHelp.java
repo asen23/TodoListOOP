@@ -24,7 +24,7 @@ public class PrintHelp {
 			System.out.println();
 		}
 	}
-	
+
 	public void printEnter() {
 		System.out.println();
 	}

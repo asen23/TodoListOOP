@@ -31,10 +31,10 @@ public class ToDoMenuList implements IListing {
 				option.addTodo();
 				break;
 			case 3:
-//                    editTodo();
+				option.editTodo();
 				break;
 			case 4:
-//                    deleteTodo();
+				option.deleteTodo();
 				break;
 			case 0:
 				break;

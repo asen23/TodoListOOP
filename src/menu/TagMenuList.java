@@ -8,7 +8,6 @@ public class TagMenuList implements IListing {
 	PrintHelp ph = PrintHelp.getHelp();
 	Scanner scan = new Scanner(System.in);
 
-
 	protected void MenuList() {
 		TagMenuChoice option = new TagMenuChoice();
 		int choice = -1;
