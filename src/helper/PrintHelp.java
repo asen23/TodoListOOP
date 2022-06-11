@@ -24,6 +24,10 @@ public class PrintHelp {
 			System.out.println();
 		}
 	}
+	
+	public void printEnter() {
+		System.out.println();
+	}
 
 	public void pressEnter() {
 		System.out.println("Press Enter to Continue");

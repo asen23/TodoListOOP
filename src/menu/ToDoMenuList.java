@@ -10,6 +10,7 @@ public class ToDoMenuList implements IListing {
 
 	protected void MenuList() {
 		int choice = -1;
+		ToDoMenuChoice option = new ToDoMenuChoice();
 
 		do {
 			printMenuList();
@@ -24,10 +25,10 @@ public class ToDoMenuList implements IListing {
 			}
 			switch (choice) {
 			case 1:
-//                    viewTodos();
+				option.viewTodos();
 				break;
 			case 2:
-//                    addTodo();
+				option.addTodo();
 				break;
 			case 3:
 //                    editTodo();
