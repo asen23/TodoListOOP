@@ -3,20 +3,15 @@ package db;
 import java.sql.*;
 
 public class Connect {
-
 	// CREDENTIALS
 	private final String USERNAME = "root";
 	private final String PASSWORD = "";
 	private final String DATABASE_NAME = "todo";
-
 	private final String HOST = "localhost";
 	private final String PORT = "3306";
-
 	private final String CONNECTION = String.format("jdbc:mysql://%s:%s/%s", HOST, PORT, DATABASE_NAME);
-
 	private Connection con;
 	private Statement stmt;
-
 	private static Connect instance = new Connect();
 
 	private Connect() {
