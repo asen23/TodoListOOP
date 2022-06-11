@@ -82,10 +82,10 @@ public class TagMenu implements IListing {
     private void editTag() {
         ph.printBlankPage();
         print(tag.getTags());
-        int tagIndex = getTagIndex("Choose tag index to edit");
+        int tagId = getTagId("Choose tag id to edit");
         String tagName = getTagName();
-        System.out.printf("%s has been changed to %s\n", tag.getTags().get(tagIndex - 1).getName(), tagName);
-        tag.updateTag(tagIndex, tagName);
+        System.out.printf("%s has been changed to %s\n", tag.getTags().get(tagId - 1).getName(), tagName);
+        tag.updateTag(tagId, tagName);
         ph.pressEnter();
 
     }
@@ -93,13 +93,13 @@ public class TagMenu implements IListing {
     private void deleteTag() {
         ph.printBlankPage();
         print(tag.getTags());
-        int tagIndex = getTagIndex("Choose tag index to delete");
-        System.out.printf("%s has been deleted\n", tag.getTags().get(tagIndex - 1).getName());
-        tag.deleteTag(tagIndex);
+        int tagId = getTagId("Choose tag id to delete");
+        System.out.printf("%s has been deleted\n", tag.getTags().get(tagId - 1).getName());
+        tag.deleteTag(tagId);
         ph.pressEnter();
     }
 
-    private int getTagIndex(String sentence) {
+    private int getTagId(String sentence) {
         int choice;
         do {
             System.out.printf("%s [1..%d]\n", sentence, tag.getTags().size());
@@ -131,8 +131,7 @@ public class TagMenu implements IListing {
 
     private void print(List<Tag> tags) {
         ph.printSeparator();
-        for (Tag tag : tags
-        ) {
+        for (Tag tag : tags) {
             System.out.printf("%d. %s\n", tag.getId(), tag.getName());
         }
         ph.printSeparator();
