@@ -43,6 +43,45 @@ public class TodoDatabase implements ITodoRepository {
     }
 
     @Override
+    public Todo getTodoById(int id) {
+        if (isTodoNotExist(id)) {
+            return null;
+        }
+        try (PreparedStatement ps = db.prepareStatement(
+              "SELECT * FROM todo " +
+              "WHERE id = ?"
+        )) {
+            ps.setInt(1, id);
+            ResultSet result = ps.executeQuery();
+            result.next();
+            int todoId = result.getInt("id");
+            String title = result.getString("title");
+            String description = result.getString("description");
+            boolean isDone = result.getBoolean("is_done");
+            ArrayList<Tag> tags = new ArrayList<>();
+            try (PreparedStatement tps = db.prepareStatement(
+                  "SELECT id, name FROM todo_tag " +
+                  "JOIN tag ON id = tag_id " +
+                  "WHERE todo_id = ?"
+            )) {
+                tps.setInt(1, todoId);
+                ResultSet tagResult = tps.executeQuery();
+                while (tagResult.next()) {
+                    int tagId = tagResult.getInt("id");
+                    String name = tagResult.getString("name");
+                    tags.add(new Tag(tagId, name));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return new Todo(todoId, title, description, isDone, tags);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
     public boolean updateTodo(int id, String title, String description) {
         if (isTodoNotExist(id)) {
             return false;
