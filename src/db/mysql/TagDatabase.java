@@ -41,6 +41,27 @@ public class TagDatabase implements ITagRepository {
     }
 
     @Override
+    public Tag getTagById(int id) {
+        if (isTagNotExist(id)) {
+            return null;
+        }
+        try (PreparedStatement ps = db.prepareStatement(
+              "SELECT * FROM tag " +
+              "WHERE id = ?"
+        )) {
+            ps.setInt(1, id);
+            ResultSet result = ps.executeQuery();
+            result.next();
+            int tagId = result.getInt("id");
+            String name = result.getString("name");
+            return new Tag(tagId, name);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
     public boolean updateTag(int id, String name) {
         if (isTagNotExist(id)) {
             return false;
