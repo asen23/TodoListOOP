@@ -1,11 +1,7 @@
 package menu;
 
-import java.util.List;
 import java.util.Scanner;
 
-import db.ITagRepository;
-import db.model.Tag;
-import di.Injection;
 import helper.PrintHelp;
 
 public class TagMenuList implements IListing {
