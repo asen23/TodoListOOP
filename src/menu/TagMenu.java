@@ -1,8 +1,11 @@
 package menu;
 
+import java.util.List;
 import java.util.Scanner;
 
 import db.ITagRepository;
+import db.model.Tag;
+import db.model.Todo;
 import di.Injection;
 import helper.PrintHelp;
 
@@ -27,7 +30,7 @@ public class TagMenu implements IListing {
 
             switch (choice) {
                 case 1:
-//                    viewTags();
+                    viewTags();
                     break;
                 case 2:
                     addTag();
@@ -48,7 +51,28 @@ public class TagMenu implements IListing {
         } while (choice != 0);
     }
 
+    @Override
+    public void printMenuList() {
+        ph.printBlankPage();
+        ph.printSeparator();
+        System.out.println("1. View Tag list ");
+        System.out.println("2. Add a Tag");
+        System.out.println("3. Edit a Tag");
+        System.out.println("4. Delete a Tag");
+        System.out.println("0. Back to main menu");
+        ph.printSeparator();
+    }
+
+    private void viewTags() {
+        ph.printBlankPage();
+        ph.printSeparator();
+        System.out.println("List of Tags");
+        print(tag.getTags());
+        ph.pressEnter();
+    }
+
     private void addTag() {
+        ph.printBlankPage();
         String name;
         do {
             System.out.println("Input a new tag [1..15]");
@@ -62,17 +86,18 @@ public class TagMenu implements IListing {
         } while (true);
         tag.addTag(name);
         System.out.printf("%s has been added to tags database!\n", name);
+        ph.pressEnter();
     }
 
-    @Override
-    public void printMenuList() {
 
+
+    private void print(List<Tag> tags) {
         ph.printSeparator();
-        System.out.println("1. View Tag list ");
-        System.out.println("2. Add a Tag");
-        System.out.println("3. Edit a Tag");
-        System.out.println("4. Delete a Tag");
-        System.out.println("0. Back to main menu");
-        ph.printSeparator();
+        for (Tag tag : tags
+        ) {
+            System.out.printf("%d. %s\n", tag.getId(), tag.getName());
+        }
     }
+
+
 }
