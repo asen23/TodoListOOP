@@ -38,8 +38,10 @@ public class ToDoMenuList implements IListing {
 				break;
 			case 5:
 				option.addTagInTodo();
+				break;
 			case 6:
 				option.deleteTagInTodo();
+				break;
 			case 0:
 				break;
 			default:
