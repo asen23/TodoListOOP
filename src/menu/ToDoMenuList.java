@@ -36,6 +36,10 @@ public class ToDoMenuList implements IListing {
 			case 4:
 				option.deleteTodo();
 				break;
+			case 5:
+				option.addTagInTodo();
+			case 6:
+				option.deleteTagInTodo();
 			case 0:
 				break;
 			default:
@@ -53,6 +57,8 @@ public class ToDoMenuList implements IListing {
 		System.out.println("2. Add a Todo");
 		System.out.println("3. Edit a Todo");
 		System.out.println("4. Delete a Todo");
+		System.out.println("5. Add Tag In Todo");
+		System.out.println("6. Delete Tag In Todo");
 		System.out.println("0. Back to main menu");
 		ph.printSeparator();
 	}

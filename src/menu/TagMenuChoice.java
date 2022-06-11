@@ -14,7 +14,6 @@ public class TagMenuChoice {
 	ITagRepository tag = Injection.getTagRepository();
 
 	protected void viewTags() {
-		ph.printBlankPage();
 		ph.printSeparator();
 		System.out.println("List of Tags");
 		print(tag.getTags());
@@ -22,7 +21,6 @@ public class TagMenuChoice {
 	}
 
 	protected void addTag() {
-		ph.printBlankPage();
 		String name = getTagName();
 		tag.addTag(name);
 		System.out.printf("%s has been added to tags database!\n", name);
@@ -30,7 +28,6 @@ public class TagMenuChoice {
 	}
 
 	protected void editTag() {
-		ph.printBlankPage();
 		print(tag.getTags());
 		int tagId = getTagId("Choose tag id to edit");
 		String tagName = getTagName();
@@ -45,7 +42,6 @@ public class TagMenuChoice {
 	}
 
 	protected void deleteTag() {
-		ph.printBlankPage();
 		print(tag.getTags());
 		int tagId = getTagId("Choose tag id to delete");
 		System.out.printf("Deleting %s..\n", tag.getTagById(tagId).getName());
