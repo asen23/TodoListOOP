@@ -3,6 +3,7 @@ package menu;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import db.ITagRepository;
 import db.ITodoRepository;
 import db.model.Tag;
 import db.model.Todo;
@@ -14,6 +15,7 @@ public class ToDoMenuChoice {
 	PrintHelp ph = PrintHelp.getHelp();
 	ArrayList<Todo> todos = new ArrayList<>();
 	ITodoRepository td = Injection.getTodoRepository();
+	ITagRepository tg = Injection.getTagRepository();
 	TagMenuChoice tag = new TagMenuChoice();
 
 	protected void viewTodos() {
@@ -56,9 +58,8 @@ public class ToDoMenuChoice {
 		ph.printEnter();
 		viewEditTodoList();
 		int choice = scan.nextInt();
-		System.out.print("ID          = ");
-		int id = scan.nextInt();
 		scan.nextLine();
+		int id = getTodoId();
 		if (choice == 1) {
 			boolean isDone = scan.nextBoolean();
 			td.updateTodo(id, isDone);
@@ -87,25 +88,49 @@ public class ToDoMenuChoice {
 	protected void deleteTodo() {
 		ph.printEnter();
 		viewTodos();
-		System.out.print("ID          = ");
-		int id = scan.nextInt();
-		scan.nextLine();
+		int id = getTodoId();
 		td.deleteTodo(id);
 		System.out.println("Congrats, an item successfully deleted from your Todo List");
 		viewTodos();
 		ph.pressEnter();
 		ph.printEnter();
 	}
+	
+	protected int getTodoId() {
+		int choice;
+		do {
+			System.out.print("ID          = ");
+			choice = scan.nextInt();
+			scan.nextLine();
+			if (td.getTodoById(choice) == null) {
+				System.out.println("Id is not valid! please enter again!");
+			} else {
+				break;
+			}
+		} while (true);
+		return choice;
+	}
+	
+	protected int getTagId() {
+		int choice;
+		do {
+			System.out.print("TagID       = ");
+			choice = scan.nextInt();
+			scan.nextLine();
+			if (tg.getTagById(choice) == null) {
+				System.out.println("Id is not valid! please enter again!");
+			} else {
+				break;
+			}
+		} while (true);
+		return choice;
+	}
 
 	protected void addTagInTodo() {
 		ph.printEnter();
 		tag.viewTags();
-		System.out.print("ID             = ");
-		int id = scan.nextInt();
-		scan.nextLine();
-		System.out.print("TagID          = ");
-		int tagId = scan.nextInt();
-		scan.nextLine();
+		int id = getTodoId();
+		int tagId = getTagId();
 		td.addTag(id, tagId);
 		System.out.println("Congrats, a Tag successfully linked with a Todo");
 		ph.pressEnter();
@@ -115,12 +140,8 @@ public class ToDoMenuChoice {
 	protected void deleteTagInTodo() {
 		ph.printEnter();
 		tag.viewTags();
-		System.out.print("ID             = ");
-		int id = scan.nextInt();
-		scan.nextLine();
-		System.out.print("TagID          = ");
-		int tagId = scan.nextInt();
-		scan.nextLine();
+		int id = getTodoId();
+		int tagId = getTagId();
 		td.removeTag(id, tagId);
 		System.out.println("Congrats, a Tag successfully removed from a Todo");
 		ph.pressEnter();
