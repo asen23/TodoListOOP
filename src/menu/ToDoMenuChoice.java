@@ -65,7 +65,7 @@ public class ToDoMenuChoice {
 			if (td.updateTodo(id, isDone)) {
 				System.out.println("Congrats, item's status successfully edited in your Todo List");
 			} else {
-				System.out.println("Edit failed..");
+				System.out.println("Edit process failed..");
 			}
 		} else {
 			System.out.print("Title       = ");
@@ -75,7 +75,7 @@ public class ToDoMenuChoice {
 			if (td.updateTodo(id, title, description)) {
 				System.out.println("Congrats, item's detail successfully edited in your Todo List");
 			} else {
-				System.out.println("Edit failed..");
+				System.out.println("Edit process failed..");
 			}
 		}
 		ph.pressEnter();
@@ -141,8 +141,12 @@ public class ToDoMenuChoice {
 		tag.viewTags();
 		int id = getTodoId();
 		int tagId = getTagId();
-		td.addTag(id, tagId);
-		System.out.println("Congrats, a Tag successfully linked with a Todo");
+		if(td.addTag(id, tagId)){
+			System.out.println("Congrats, a Tag successfully linked with a Todo");
+		}
+		else {
+			System.out.println("a Tag failed to link with a todo..");
+		}
 		ph.pressEnter();
 		ph.printEnter();
 	}
@@ -152,8 +156,12 @@ public class ToDoMenuChoice {
 		tag.viewTags();
 		int id = getTodoId();
 		int tagId = getTagId();
-		td.removeTag(id, tagId);
-		System.out.println("Congrats, a Tag successfully removed from a Todo");
+		if(td.removeTag(id, tagId)) {
+			System.out.println("Congrats, a Tag successfully removed from a Todo");
+		}
+		else {
+			System.out.println("a tag failed to removed from a Todo..");
+		}
 		ph.pressEnter();
 		ph.printEnter();
 	}
