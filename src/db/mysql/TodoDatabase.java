@@ -1,6 +1,5 @@
 package db.mysql;
 
-import db.Connect;
 import db.ITodoRepository;
 import db.model.Tag;
 import db.model.Todo;
@@ -11,8 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TodoDatabase implements ITodoRepository {
-    private final Connect db = Connect.getInstance();
+public class TodoDatabase extends Database implements ITodoRepository {
 
     @Override
     public void addTodo(String title, String description) {

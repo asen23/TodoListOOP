@@ -1,6 +1,5 @@
 package db.mysql;
 
-import db.Connect;
 import db.ITagRepository;
 import db.model.Tag;
 
@@ -10,8 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TagDatabase implements ITagRepository {
-    private final Connect db = Connect.getInstance();
+public class TagDatabase extends Database implements ITagRepository {
 
     @Override
     public void addTag(String name) {
