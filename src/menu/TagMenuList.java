@@ -4,13 +4,13 @@ import java.util.Scanner;
 
 import helper.PrintHelp;
 
-public class ToDoMenu implements IListing {
+public class TagMenuList implements IListing {
 	PrintHelp ph = PrintHelp.getHelp();
 	Scanner scan = new Scanner(System.in);
 
 	protected void MenuList() {
+		TagMenuChoice option = new TagMenuChoice();
 		int choice = -1;
-
 		do {
 			printMenuList();
 			while (scan.hasNext()) {
@@ -22,18 +22,19 @@ public class ToDoMenu implements IListing {
 				scan.nextLine();
 				break;
 			}
+
 			switch (choice) {
 			case 1:
-//                    viewTodos();
+				option.viewTags();
 				break;
 			case 2:
-//                    addTodo();
+				option.addTag();
 				break;
 			case 3:
-//                    editTodo();
+				option.editTag();
 				break;
 			case 4:
-//                    deleteTodo();
+				option.deleteTag();
 				break;
 			case 0:
 				break;
@@ -47,12 +48,14 @@ public class ToDoMenu implements IListing {
 
 	@Override
 	public void printMenuList() {
+		ph.printBlankPage();
 		ph.printSeparator();
-		System.out.println("1. View Todo list");
-		System.out.println("2. Add a Todo");
-		System.out.println("3. Edit a Todo");
-		System.out.println("4. Delete a Todo");
+		System.out.println("1. View Tag list ");
+		System.out.println("2. Add a Tag");
+		System.out.println("3. Edit a Tag");
+		System.out.println("4. Delete a Tag");
 		System.out.println("0. Back to main menu");
 		ph.printSeparator();
 	}
+
 }

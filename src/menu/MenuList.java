@@ -4,13 +4,13 @@ import java.util.Scanner;
 
 import helper.PrintHelp;
 
-public class Menu {
+public class MenuList {
 	PrintHelp ph = PrintHelp.getHelp();
 	Scanner scan = new Scanner(System.in);
-	ToDoMenu toDo = new ToDoMenu();
-	TagMenu tag = new TagMenu();
+	ToDoMenuList toDo = new ToDoMenuList();
+	TagMenuList tag = new TagMenuList();
 
-	public Menu() {
+	public MenuList() {
 		int choice;
 		do {
 			ph.printSeparator();
