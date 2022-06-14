@@ -27,13 +27,13 @@ public class ToDoMenuChoice {
 		ph.printSeparator();
 		for (Todo x : todos) {
 			i++;
-			System.out.println(i+".");
+			System.out.println(i + ".");
 			System.out.println("ID          = " + x.getId());
 			System.out.println("Title       = " + x.getTitle());
 			System.out.println("Description = " + x.getDescription());
-			  System.out.print("Tag         = ");
+			System.out.print("Tag         = ");
 			for (Tag y : x.getTags()) {
-				System.out.println(y.getName()+ " ");
+				System.out.println(y.getName() + " ");
 			}
 			ph.printEnter();
 		}
@@ -62,15 +62,22 @@ public class ToDoMenuChoice {
 		int id = getTodoId();
 		if (choice == 1) {
 			boolean isDone = scan.nextBoolean();
-			td.updateTodo(id, isDone);
+			if (td.updateTodo(id, isDone)) {
+				System.out.println("Congrats, item's status successfully edited in your Todo List");
+			} else {
+				System.out.println("Edit failed..");
+			}
 		} else {
 			System.out.print("Title       = ");
 			String title = scan.nextLine();
 			System.out.print("Description = ");
 			String description = scan.nextLine();
-			td.updateTodo(id, title, description);
+			if (td.updateTodo(id, title, description)) {
+				System.out.println("Congrats, item's detail successfully edited in your Todo List");
+			} else {
+				System.out.println("Edit failed..");
+			}
 		}
-		System.out.println("Congrats, an item successfully edited in your Todo List");
 		ph.pressEnter();
 		ph.printEnter();
 	}
@@ -89,13 +96,16 @@ public class ToDoMenuChoice {
 		ph.printEnter();
 		viewTodos();
 		int id = getTodoId();
-		td.deleteTodo(id);
-		System.out.println("Congrats, an item successfully deleted from your Todo List");
+		if (td.deleteTodo(id)) {
+			System.out.println("Congrats, an item successfully deleted from your Todo List");
+		} else {
+			System.out.println("Deletion has failed..");
+		}
 		viewTodos();
 		ph.pressEnter();
 		ph.printEnter();
 	}
-	
+
 	protected int getTodoId() {
 		int choice;
 		do {
@@ -110,7 +120,7 @@ public class ToDoMenuChoice {
 		} while (true);
 		return choice;
 	}
-	
+
 	protected int getTagId() {
 		int choice;
 		do {
