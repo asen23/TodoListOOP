@@ -15,15 +15,13 @@ public class Connect {
 	private final String CONNECTION = String.format("jdbc:mysql://%s:%s/%s", HOST, PORT, DATABASE_NAME);
 
 	private Connection con;
-	private Statement stmt;
 
-	private static Connect instance = new Connect();
+	private static final Connect instance = new Connect();
 
 	private Connect() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			con = DriverManager.getConnection(CONNECTION, USERNAME, PASSWORD);
-			stmt = con.createStatement();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

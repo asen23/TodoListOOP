@@ -1,6 +1,5 @@
 package db;
 
-import db.model.Tag;
 import db.model.Todo;
 
 import java.util.List;

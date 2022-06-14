@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class PrintHelp {
 	Scanner scan = new Scanner(System.in);
 
-	private static PrintHelp helper = new PrintHelp();
+	private static final PrintHelp helper = new PrintHelp();
 
 	private PrintHelp() {
 
