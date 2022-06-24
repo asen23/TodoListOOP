@@ -23,6 +23,28 @@ public class Main {
     // 2. Mencantumkan tags ke suatu todo.
     // 3. Mencari todo sesuai dengan tags.
 
+    // Design Pattern yang kami gunakan berupa
+    // 1. Repository Pattern
+    // 2. Proxy Pattern
+    // 3. Singleton Pattern
+
+    // Struktur kode
+    // db -> Kode yang berhubungan dengan database
+    // di -> Kode yang bertugas untuk menginject dependency, mirip factory pattern
+    // main -> Entry point
+    // menu -> kode yang berhubungan dengan menu dan mengolah user input
+
+    // Troubleshoot
+    // apabila projek tidak bisa dijalankan bisa dicoba beberapa step berikut
+    // - Pastikan mengimport projek dengan benar
+    // - Pastikan sudah menjalankan xampp dengan mysql
+    // - Pastikan sudah membuat database dengan nama "todo" dan mengimport todo.sql
+    // yang bisa didapat dari
+    // https://github.com/asen23/TodoListOOP/releases/tag/SupportFile
+    // - Pastikan sudah menaruh mysql connector dan memastikan sudah terlink didalam
+    // project, connector dapat didownload dari
+    // https://github.com/asen23/TodoListOOP/releases/tag/SupportFile
+
     // Pembagian tugas anggota:
     // - Andersen: Hal-hal yang berhubungan dengan DB dan method-methodnya
     // (kebanyakan di package db).
